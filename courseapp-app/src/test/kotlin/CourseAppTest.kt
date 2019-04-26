@@ -5,8 +5,11 @@ import il.ac.technion.cs.softwaredesign.storage.write
 import io.mockk.every
 import io.mockk.mockkStatic
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
+import java.lang.IllegalArgumentException
 
 class CourseAppTest {
     private val courseAppInitializer = CourseAppInitializer()
@@ -45,26 +48,26 @@ class CourseAppTest {
 
     @Test
     fun `cant create two users with same username`() {
-
+        app.login("sahar", "a very strong password")
+        assertThrows<IllegalArgumentException> {
+            app.login("sahar", "weak password")
+        }
     }
 
     @Test
-    fun `reading token after removing it should return null`() {
-
+    fun `using token to check login session after self's login session expires should not work`() {
+        val token = app.login("sahar", "a very strong password")
+        app.login("yuval", "popcorn")
+        app.logout(token)
+        assertThrows<IllegalArgumentException> {
+            app.isUserLoggedIn(token, "yuval")
+        }
     }
 
     @Test
     fun `two different users should have different tokens`() {
-
-    }
-
-    @Test
-    fun `reading user password after deleting them should not work`() {
-
-    }
-
-    @Test
-    fun `checking if user exists after deleting them should return false`() {
-
+        val token1 = app.login("sahar", "a very strong password")
+        val token2 = app.login("yuval", "popcorn")
+        assertTrue(token1 != token2)
     }
 }
