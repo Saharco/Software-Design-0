@@ -3,18 +3,21 @@ package storage
 import il.ac.technion.cs.softwaredesign.storage.read
 import il.ac.technion.cs.softwaredesign.storage.write
 import java.util.*
+import javax.security.auth.callback.Callback
 
 interface UserAuthenticationCRUD {
+
+    fun createUser(username: String, password: String)
+
+    fun createUserToken(username: String)
 
     fun readUserPassword(username: String): String?
 
     fun readUserToken(username: String): String?
 
-    fun createUserToken(username: String)
+    //fun deleteUser(username: String)
 
     fun deleteUserToken(username: String)
-
-    fun createUser(username: String, password: String)
 }
 
 /**
