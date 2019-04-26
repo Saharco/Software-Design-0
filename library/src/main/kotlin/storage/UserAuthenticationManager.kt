@@ -3,7 +3,6 @@ package storage
 import il.ac.technion.cs.softwaredesign.storage.read
 import il.ac.technion.cs.softwaredesign.storage.write
 import java.util.*
-import javax.security.auth.callback.Callback
 
 interface UserAuthenticationCRUD {
 
