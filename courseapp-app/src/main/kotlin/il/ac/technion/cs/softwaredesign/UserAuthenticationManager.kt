@@ -5,9 +5,10 @@ import storage.Database
 import java.time.LocalDateTime
 
 /**
- * Manages users in a database.
+ * Manages users in a database: this class wraps authentication functionality.
  * Provides common database operations regarding users and login session tokens
  *
+ * @see CourseApp
  * @see storage.Database
  *
  * @param db: database's root
@@ -68,7 +69,9 @@ class UserAuthenticationManager(db: Database,
         }
     }
 
-
+    /**
+     * Generates a unique token from a given username
+     */
     private fun generateToken(username: String): String {
         return "$username+${LocalDateTime.now()}"
     }

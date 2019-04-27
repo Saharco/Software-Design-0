@@ -52,7 +52,7 @@ class CourseAppTest {
     }
 
     @Test
-    fun `cant create two users with same username`() {
+    fun `creating two users with same username should throw IllegalArgumentException`() {
         app.login("sahar", "a very strong password")
         assertThrows<IllegalArgumentException> {
             app.login("sahar", "weak password")
@@ -60,12 +60,27 @@ class CourseAppTest {
     }
 
     @Test
-    fun `using token to check login session after self's login session expires should not work`() {
+    fun `using token to check login session after self's login session expires should throw IllegalArgumentException`() {
         val token = app.login("sahar", "a very strong password")
         app.login("yuval", "popcorn")
         app.logout(token)
         assertThrows<IllegalArgumentException> {
             app.isUserLoggedIn(token, "yuval")
+        }
+    }
+
+    @Test
+    fun `logging out with an invalid token should throw IllegalArgumentException`() {
+        var token = "invalid token"
+        assertThrows<IllegalArgumentException> {
+            app.logout(token)
+        }
+
+        token = app.login("sahar", "a very strong password")
+        app.logout(token)
+
+        assertThrows<IllegalArgumentException> {
+            app.logout(token)
         }
     }
 
@@ -77,7 +92,7 @@ class CourseAppTest {
     }
 
     @Test
-    fun `system can hold lots of distinct users and tokens`() {
+    fun `stress - system can hold lots of distinct users and tokens`() {
         val strings = ArrayList<String>()
         populateWithRandomStrings(strings)
         val users = strings.distinct()

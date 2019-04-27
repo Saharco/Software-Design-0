@@ -3,7 +3,8 @@ package storage
 import java.security.MessageDigest
 
 /**
- *
+ *  Wrapper class for decrypting messages.
+ *  Decryption is one-way, using the SHA-256 algorithm
  */
 class Hasher {
     fun hash(message: String): String {
@@ -13,6 +14,9 @@ class Hasher {
         return digest.fold("", { str, it -> str + "%02x".format(it) })
     }
 
+    /**
+     * calls the [hash] method to encrypt a message
+     */
     operator fun invoke(message: String): String {
         return hash(message)
     }
