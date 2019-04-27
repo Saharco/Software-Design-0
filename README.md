@@ -40,8 +40,8 @@ The tests run on JUnit 5.3 and cover all the methods.
 We had no prior experience with programming in Kotlin & using MockK so we were pretty clueless at the start. However, they proved to be very easy and intuitive to use. Our main problem was trying to figure out the database's design. At first, we went with a short and easy API that "did the job", but it felt very C-style and low-level still so we scrapped it. Our initial design was prefix-based. When moving on to a better API - we faced the problem of reserved special character "/" in specifying file paths. We decided to used encryptions as stated above in order to solve this issue, and made sure to test that it worked. Along the way we got to learn more about Kotlin's standard library.
 
 ### Feedback
-We think it was a great first assignment to introduce us to the language. Our only complaints are these two:
+We think it was a great first assignment to introduce us to the language! Our only complaints are these two:
 
-1) It felt a little too "up in the air" at the start - it wasn't very clear what we were supposed to do and where to start after we read the PDF file.
+1) It felt a little too "up in the air" at the start - it wasn't very clear what we were supposed to do and where to start after we read the PDF file. We would really appreciate some stronger guidance at "how to start" in the future, since it's easier once you get into it.
 
 2) We felt it was also a little too long for an introductory assignment.
