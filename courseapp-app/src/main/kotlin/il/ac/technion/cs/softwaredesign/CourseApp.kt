@@ -2,7 +2,6 @@ package il.ac.technion.cs.softwaredesign
 
 import storage.CourseAppDatabase
 import java.lang.IllegalArgumentException
-import java.util.*
 
 typealias db = CourseAppDatabase
 
@@ -29,28 +28,8 @@ class CourseApp {
      * @return An authentication token to be used in other calls.
      */
     fun login(username: String, password: String): String {
-        val userDocument = db.collection("users")
-                .document(username)
-        val storedPassword = userDocument.read("password")
-
-        if (storedPassword != null && storedPassword != password)
-            throw IllegalArgumentException("Incorrect password")
-        if (userDocument.read("token") != null)
-            throw IllegalArgumentException("User already logged in")
-
-        val token = UUID.randomUUID().toString()
-        userDocument.set(Pair("token", token))
-        if (storedPassword == null)
-            userDocument.set(Pair("password", password))
-
-        userDocument.write()
-
-        db.collection("tokens")
-                .document(token)
-                .set(Pair("username", username))
-                .write()
-
-        return token
+        val auth = UserAuthenticationManager(db)
+        return auth.performLogin(username, password)
     }
 
     /**
@@ -62,16 +41,8 @@ class CourseApp {
      * @throws IllegalArgumentException If the auth [token] is invalid.
      */
     fun logout(token: String) {
-        val tokenDocument = db.collection("tokens")
-                .document(token)
-        val username = tokenDocument.read("username")
-                ?: throw IllegalArgumentException("Invalid token")
-
-        tokenDocument.delete()
-
-        db.collection("users")
-                .document(username)
-                .delete(listOf("token"))
+        val auth = UserAuthenticationManager(db)
+        return auth.performLogout(token)
     }
 
     /**
@@ -86,18 +57,7 @@ class CourseApp {
      * not exist.
      */
     fun isUserLoggedIn(token: String, username: String): Boolean? {
-        if (!db.collection("tokens")
-                        .document(token)
-                        .exists())
-            throw IllegalArgumentException("Invalid token")
-
-        return try {
-            val otherToken = db.collection("users")
-                    .document(username)
-                    .read("token")
-            otherToken != null
-        } catch (e: IllegalArgumentException) {
-            null
-        }
+        val auth = UserAuthenticationManager(db)
+        return auth.isUserLoggedIn(token, username)
     }
 }

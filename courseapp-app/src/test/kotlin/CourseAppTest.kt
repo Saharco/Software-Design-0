@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import java.lang.IllegalArgumentException
 
+
 class CourseAppTest {
     private val courseAppInitializer = CourseAppInitializer()
     private val app = CourseApp()
@@ -25,7 +26,11 @@ class CourseAppTest {
         every {
             read(any())
         } answers {
-            db[firstArg<ByteArray>().toString(charset)]?.toByteArray()
+            val result = db[firstArg<ByteArray>().toString(charset)]?.toByteArray()
+            if (result != null)
+                // wait for the specified amount of time
+                Thread.sleep(result.size.toLong())
+            result
         }
         every {
             write(any(), any())
@@ -69,5 +74,38 @@ class CourseAppTest {
         val token1 = app.login("sahar", "a very strong password")
         val token2 = app.login("yuval", "popcorn")
         assertTrue(token1 != token2)
+    }
+
+    @Test
+    fun `system can hold lots of distinct users and tokens`() {
+        val strings = ArrayList<String>()
+        populateWithRandomStrings(strings)
+        val users = strings.distinct()
+        val systemSize = users.size
+        val tokens = ArrayList<String>()
+
+        for (i in 0 until systemSize) {
+            // Dont care about exact values here: username & password are the same for each user
+            val token = app.login(users[i], users[i])
+            tokens.add(token)
+        }
+
+        assertEquals(tokens.size, users.size)
+
+        for (token in tokens) {
+            app.logout(token)
+        }
+    }
+
+    private fun populateWithRandomStrings(list: ArrayList<String>, amount: Int = 1000,
+                                          maxSize: Int = 20, charPool: List<Char>? = null) {
+        val pool = charPool ?: ('a'..'z') + ('A'..'Z') + ('0'..'9') + '/'
+        for (i in 0 until amount) {
+            val randomString = (1..maxSize)
+                    .map { kotlin.random.Random.nextInt(0, pool.size) }
+                    .map(pool::get)
+                    .joinToString("")
+            list.add(randomString)
+        }
     }
 }
