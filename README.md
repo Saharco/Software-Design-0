@@ -15,7 +15,7 @@ The database operates on strings (as both keys and values), utilizes fluent API 
 
 **CollectionReference**: akin to a folder in a file system. Used solely holding documents.
 
-**DocumentReference**: akin to a file in a file system. Values are set in a key-value fashion. Terminal operations include: write/read/delete etc. Uses a hash table to store the specified key-value pairs to be written in the document.
+**DocumentReference**: akin to a file in a file system. Values are set in a key-value fashion. Terminal operations include: write/read/update/delete etc. Uses a hash table to store the specified key-value pairs to be written in the document.
 
 **ExtendableDocumentReference**: a DocumentReference that can contain its own collections.
 

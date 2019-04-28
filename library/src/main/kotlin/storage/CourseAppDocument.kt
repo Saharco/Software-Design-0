@@ -42,7 +42,7 @@ abstract class CourseAppDocument internal constructor(path: String) : DocumentRe
     }
 
     /**
-     * @inhertDoc
+     * @inheritDoc
      *
      * Returns null if the data does not exist in the document
      */
@@ -60,8 +60,19 @@ abstract class CourseAppDocument internal constructor(path: String) : DocumentRe
                 .toByteArray())
     }
 
+    /**
+     * @inheritDoc
+     *
+     * @throws IllegalStateException if the document to be updated contains no extra information
+     */
     override fun update() {
-        TODO("not implemented: check if implementation for this is needed")
+        if (data.isEmpty())
+            throw IllegalStateException("Can\'t write empty document")
+        allocatePath()
+
+        for (entry in data.entries) {
+            writeEntry("$path${entry.key}/", entry.value)
+        }
     }
 
     override fun delete() {

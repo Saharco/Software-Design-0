@@ -172,6 +172,30 @@ class CourseAppDatabaseTest {
     }
 
     @Test
+    fun `can update existing and non existing fields in a document which may or may not exist`() {
+        var documentRef = db.collection("users")
+                .document("sahar")
+
+        documentRef.set(Pair("favorite food", "pizza"))
+                .write()
+
+        documentRef.set(Pair("favorite food", "ice cream"))
+                .set(Pair("favorite animal", "dog"))
+                .update()
+
+        assertEquals(documentRef.read("favorite food"), "ice cream")
+        assertEquals(documentRef.read("favorite animal"), "dog")
+
+        documentRef = db.collection("users")
+                .document("yuval")
+
+        documentRef.set(Pair("favorite food", "pizza"))
+                .update()
+
+        assertEquals(documentRef.read("favorite food"), "pizza")
+    }
+
+    @Test
     fun `any character can be used as a document's name`() {
         val chars = generateCharactersList()
         val collectionRef = db.collection("root")
