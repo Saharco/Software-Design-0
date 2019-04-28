@@ -39,19 +39,19 @@ class CourseAppTest {
     }
 
     @BeforeEach
-    fun resetDatabase() {
+    internal fun resetDatabase() {
         db = hashMapOf()
     }
 
     @Test
-    fun `user successfully logged in after login`() {
+    internal fun `user successfully logged in after login`() {
         val token = app.login("sahar", "a very strong password")
 
         assertEquals(app.isUserLoggedIn(token, "sahar"), true)
     }
 
     @Test
-    fun `attempting login twice without logout should throw IllegalArgumentException`() {
+    internal fun `attempting login twice without logout should throw IllegalArgumentException`() {
         app.login("sahar", "a very strong password")
 
         assertThrows<IllegalArgumentException> {
@@ -60,7 +60,7 @@ class CourseAppTest {
     }
 
     @Test
-    fun `creating two users with same username should throw IllegalArgumentException`() {
+    internal fun `creating two users with same username should throw IllegalArgumentException`() {
         app.login("sahar", "a very strong password")
         assertThrows<IllegalArgumentException> {
             app.login("sahar", "weak password")
@@ -68,7 +68,7 @@ class CourseAppTest {
     }
 
     @Test
-    fun `using token to check login session after self's login session expires should throw IllegalArgumentException`() {
+    internal fun `using token to check login session after self's login session expires should throw IllegalArgumentException`() {
         val token = app.login("sahar", "a very strong password")
         app.login("yuval", "popcorn")
         app.logout(token)
@@ -78,7 +78,7 @@ class CourseAppTest {
     }
 
     @Test
-    fun `logging out with an invalid token should throw IllegalArgumentException`() {
+    internal fun `logging out with an invalid token should throw IllegalArgumentException`() {
         var token = "invalid token"
         assertThrows<IllegalArgumentException> {
             app.logout(token)
@@ -93,14 +93,14 @@ class CourseAppTest {
     }
 
     @Test
-    fun `two different users should have different tokens`() {
+    internal fun `two different users should have different tokens`() {
         val token1 = app.login("sahar", "a very strong password")
         val token2 = app.login("yuval", "popcorn")
         assertTrue(token1 != token2)
     }
 
     @Test
-    fun `checking if user is logged in when they are not should return false`() {
+    internal fun `checking if user is logged in when they are not should return false`() {
         val token = app.login("sahar", "a very strong password")
         val otherToken = app.login("yuval", "popcorn")
         app.logout(otherToken)
@@ -108,13 +108,13 @@ class CourseAppTest {
     }
 
     @Test
-    fun `checking if user is logged in when they dont exist should return null`() {
+    internal fun `checking if user is logged in when they dont exist should return null`() {
         val token = app.login("sahar", "a very strong password")
         assertNull(app.isUserLoggedIn(token, "yuval"))
     }
 
     @Test
-    fun `system can hold lots of distinct users and tokens`() {
+    internal fun `system can hold lots of distinct users and tokens`() {
         val strings = ArrayList<String>()
         populateWithRandomStrings(strings)
         val users = strings.distinct()

@@ -31,12 +31,12 @@ class CourseAppDatabaseTest {
     }
 
     @BeforeEach
-    fun resetDatabase() {
+    internal fun resetDatabase() {
         storageMock = hashMapOf()
     }
 
     @Test
-    fun `single field write in a document is properly read after document is written`() {
+    internal fun `single field write in a document is properly read after document is written`() {
         db.collection("programming languages")
                 .document("kotlin")
                 .set(Pair("isCool", "true"))
@@ -50,7 +50,7 @@ class CourseAppDatabaseTest {
     }
 
     @Test
-    fun `multiple fields write in a document are properly read after document is written`() {
+    internal fun `multiple fields write in a document are properly read after document is written`() {
         val data = hashMapOf("date" to "April 21, 2019",
                 "isColored" to "true",
                 "isPublic" to "false",
@@ -71,7 +71,7 @@ class CourseAppDatabaseTest {
     }
 
     @Test
-    fun `reading fields or documents that do not exist should return null`() {
+    internal fun `reading fields or documents that do not exist should return null`() {
         db.collection("users")
                 .document("sahar")
                 .set(Pair("eye color", "green"))
@@ -91,7 +91,7 @@ class CourseAppDatabaseTest {
     }
 
     @Test
-    fun `writing to a document that already exists should throw IllegalArgumentException`() {
+    internal fun `writing to a document that already exists should throw IllegalArgumentException`() {
         db.collection("users")
                 .document("sahar")
                 .set(Pair("eye color", "green"))
@@ -106,7 +106,7 @@ class CourseAppDatabaseTest {
     }
 
     @Test
-    fun `writing an empty document should throw IllegalStateException`() {
+    internal fun `writing an empty document should throw IllegalStateException`() {
         assertThrows<IllegalStateException> {
             db.collection("users")
                     .document("sahar")
@@ -115,7 +115,7 @@ class CourseAppDatabaseTest {
     }
 
     @Test
-    fun `reading document after deletion should return null`() {
+    internal fun `reading document after deletion should return null`() {
         val userRef = db.collection("users")
                 .document("sahar")
 
@@ -130,7 +130,7 @@ class CourseAppDatabaseTest {
     }
 
     @Test
-    fun `deleting some fields in a document should not delete the others`() {
+    internal fun `deleting some fields in a document should not delete the others`() {
         val data = hashMapOf("date" to "April 21, 2019",
                 "isColored" to "true",
                 "isPublic" to "false",
@@ -152,7 +152,7 @@ class CourseAppDatabaseTest {
     }
 
     @Test
-    fun `can check if a document exists`() {
+    internal fun `can check if a document exists`() {
         var documentRef = db.collection("users")
                 .document("sahar")
 
@@ -168,7 +168,7 @@ class CourseAppDatabaseTest {
     }
 
     @Test
-    fun `can update existing and non existing fields in a document which may or may not exist`() {
+    internal fun `can update existing and non existing fields in a document which may or may not exist`() {
         var documentRef = db.collection("users")
                 .document("sahar")
 
@@ -192,7 +192,7 @@ class CourseAppDatabaseTest {
     }
 
     @Test
-    fun `any character can be used as a document's name`() {
+    internal fun `any character can be used as a document's name`() {
         val chars = generateCharactersList()
         val collectionRef = db.collection("root")
         val data = Pair("key", "value")
