@@ -60,13 +60,13 @@ class AuthenticationManager(db: Database,
                         .exists())
             throw IllegalArgumentException("Invalid token")
 
-        return try {
-            val otherToken = usersRoot.document(username)
-                    .read("token")
-            otherToken != null
-        } catch (e: IllegalArgumentException) {
-            null
-        }
+        if (!usersRoot.document(username)
+                        .exists())
+            return null
+
+        val otherToken = usersRoot.document(username)
+                .read("token")
+        return otherToken != null
     }
 
     /**

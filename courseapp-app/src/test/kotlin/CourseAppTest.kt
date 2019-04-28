@@ -4,8 +4,7 @@ import il.ac.technion.cs.softwaredesign.storage.read
 import il.ac.technion.cs.softwaredesign.storage.write
 import io.mockk.every
 import io.mockk.mockkStatic
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -52,6 +51,15 @@ class CourseAppTest {
     }
 
     @Test
+    fun `attempting login twice without logout should throw IllegalArgumentException`() {
+        app.login("sahar", "a very strong password")
+
+        assertThrows<IllegalArgumentException> {
+            app.login("sahar", "a very strong password")
+        }
+    }
+
+    @Test
     fun `creating two users with same username should throw IllegalArgumentException`() {
         app.login("sahar", "a very strong password")
         assertThrows<IllegalArgumentException> {
@@ -92,12 +100,26 @@ class CourseAppTest {
     }
 
     @Test
-    fun `stress - system can hold lots of distinct users and tokens`() {
+    fun `checking if user is logged in when they are not should return false`() {
+        val token = app.login("sahar", "a very strong password")
+        val otherToken = app.login("yuval", "popcorn")
+        app.logout(otherToken)
+        assertEquals(app.isUserLoggedIn(token, "yuval"), false)
+    }
+
+    @Test
+    fun `checking if user is logged in when they dont exist should return null`() {
+        val token = app.login("sahar", "a very strong password")
+        assertNull(app.isUserLoggedIn(token, "yuval"))
+    }
+
+    @Test
+    fun `system can hold lots of distinct users and tokens`() {
         val strings = ArrayList<String>()
         populateWithRandomStrings(strings)
         val users = strings.distinct()
         val systemSize = users.size
-        val tokens = ArrayList<String>()
+        val tokens = HashSet<String>()
 
         for (i in 0 until systemSize) {
             // Dont care about exact values here: username & password are the same for each user
@@ -112,8 +134,8 @@ class CourseAppTest {
         }
     }
 
-    private fun populateWithRandomStrings(list: ArrayList<String>, amount: Int = 1000,
-                                          maxSize: Int = 20, charPool: List<Char>? = null) {
+    private fun populateWithRandomStrings(list: ArrayList<String>, amount: Int = 100,
+                                          maxSize: Int = 30, charPool: List<Char>? = null) {
         val pool = charPool ?: ('a'..'z') + ('A'..'Z') + ('0'..'9') + '/'
         for (i in 0 until amount) {
             val randomString = (1..maxSize)
