@@ -16,9 +16,9 @@ import java.time.LocalDateTime
  * @param tokensRoot: (optional) root collection in which to store tokens
  *
  */
-class UserAuthenticationManager(db: Database,
-                                private var usersRoot: CollectionReference = db.collection("users"),
-                                private var tokensRoot: CollectionReference = db.collection("tokens")) {
+class AuthenticationManager(db: Database,
+                            private var usersRoot: CollectionReference = db.collection("users"),
+                            private var tokensRoot: CollectionReference = db.collection("tokens")) {
 
     fun performLogin(username: String, password: String): String {
         val userDocument = usersRoot.document(username)

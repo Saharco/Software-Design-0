@@ -28,7 +28,7 @@ class CourseApp {
      * @return An authentication token to be used in other calls.
      */
     fun login(username: String, password: String): String {
-        val auth = UserAuthenticationManager(db)
+        val auth = AuthenticationManager(db)
         return auth.performLogin(username, password)
     }
 
@@ -41,7 +41,7 @@ class CourseApp {
      * @throws IllegalArgumentException If the auth [token] is invalid.
      */
     fun logout(token: String) {
-        val auth = UserAuthenticationManager(db)
+        val auth = AuthenticationManager(db)
         return auth.performLogout(token)
     }
 
@@ -57,7 +57,7 @@ class CourseApp {
      * not exist.
      */
     fun isUserLoggedIn(token: String, username: String): Boolean? {
-        val auth = UserAuthenticationManager(db)
+        val auth = AuthenticationManager(db)
         return auth.isUserLoggedIn(token, username)
     }
 }
