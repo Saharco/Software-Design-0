@@ -21,11 +21,7 @@ class CourseAppDatabaseTest {
         every {
             read(any())
         } answers {
-            val result = storageMock[firstArg<ByteArray>().toString(charset)]?.toByteArray()
-            if (result != null)
-            // wait for the specified amount of time
-                Thread.sleep(result.size.toLong())
-            result
+            storageMock[firstArg<ByteArray>().toString(charset)]?.toByteArray()
         }
         every {
             write(any(), any())
